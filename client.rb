@@ -14,4 +14,4 @@ token = JSON.parse(response)["access_token"]
 
 p token
 
-RestClient.get 'https://healp-backend-staging.herokuapp.com/user/search?p=bolo@me.com', { 'Authorization' => "Bearer #{token}" }
+RestClient.get 'https://healp-backend-staging.herokuapp.com/user/search.json', { Authorization: "Bearer #{token}" ,params: {p:'bolo@me.com'}}
