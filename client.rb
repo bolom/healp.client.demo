@@ -1,17 +1,22 @@
 require 'rest-client'
 require 'json'
 
-client_id = 'ce84fa4ea699becba08282996fcde130ad32087827f696711050f6c682ad82bf'
-client_secret = 'db9d1d0d7c25ac79ccfee76a8a6985f0f49516abe522f887e521f3bdfd5dbb45'
+client_id = 'ec3bf3e68ebcffbba61131471e4f94c92887041a0d6c43b297682851fa8ac3df'
+client_secret = '6866574e10b5de47f560a470a8a47f73e64e0906d0ee0ffd02895a486bb1dd91'
 
 response = RestClient.post 'https://healp-backend-staging.herokuapp.com/oauth/token', {
   grant_type: 'client_credentials',
   client_id: client_id,
-  client_secret: client_secret
+  client_secret: client_secret,
+  scope: "admin"
 }
 
 token = JSON.parse(response)["access_token"]
 
 p token
 
-RestClient.get 'https://healp-backend-staging.herokuapp.com/user/search.json', { Authorization: "Bearer #{token}" ,params: {p:'bolo@me.com'}}
+response = RestClient.get 'https://healp-backend-staging.herokuapp.com/user/search.json', { Authorization: "Bearer #{token}" ,params: {q:'bolo@me.com'}}
+p response.code
+p response.cookies
+p response.headers
+p   JSON.parse(response.body)
