@@ -1,9 +1,14 @@
+require 'dotenv'
+Dotenv.load
 require 'rest-client'
 require 'json'
 require 'oauth2'
 
 client_id = 'ec3bf3e68ebcffbba61131471e4f94c92887041a0d6c43b297682851fa8ac3df'
 client_secret = '6866574e10b5de47f560a470a8a47f73e64e0906d0ee0ffd02895a486bb1dd91'
+
+#URL = "https://healp-backend-staging.herokuapp.com"
+URL ="http://localhost:3001"
 
 response = RestClient.post 'https://healp-backend-staging.herokuapp.com/oauth/token', {
   grant_type: 'client_credentials',
@@ -26,3 +31,6 @@ p   JSON.parse(response.body)
 client = OAuth2::Client.new(client_id, client_secret, :site => "https://healp-backend-staging.herokuapp.com")
 access_token = client.password.get_token('bolo@lobo.studio', 'azerty')
 puts access_token.token
+
+p "Create an account"
+response_json = RestClient.post "#{URL}/patient/sign_up", {:user=>{:name=>"tester", :email => "tester@test.biz", :password => "FILTERED", :password_confirmation => "FILTERED"}}.to_json, :content_type => :json, :accept => :json
