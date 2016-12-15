@@ -2,6 +2,7 @@ $LOAD_PATH << '.'
 require "config"
 
 config = Healp::Config.new.load
+
 response = RestClient.post "#{config[:oauth_url]}/oauth/token", {
   grant_type: 'client_credentials',
   client_id: config[:client_id],
