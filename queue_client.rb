@@ -1,19 +1,28 @@
-$LOAD_PATH << '.'
-require "config"
+require 'dotenv'
+Dotenv.load("#{File.dirname(__FILE__)}/.env")
+require_relative "config"
 
-config = Healp::Config.new.load
+config = Healp::Config.new(ENV['CLIENT_ID'],ENV['CLIENT_SECRET'],ENV['AUTH_URL'])
 
-response = RestClient.post "#{config[:oauth_url]}/oauth/token", {
-  grant_type: 'client_credentials',
-  client_id: config[:client_id],
-  client_secret: config[:client_secret],
-  scope: "admin"
+client = OAuth2::Client.new(config.client_id, config.client_secret, :site =>  config.oauth_url)
+
+access_token = client.password.get_token('patient@lobo.studio', "}S'+<01o")
+
+puts access_token.token
+images = []
+images << File.new("/Users/Michelin/Desktop/test.png", 'rb')
+images << File.new("/Users/Michelin/Desktop/test.png", 'rb')
+images << File.new("/Users/Michelin/Desktop/test.png", 'rb')
+
+response = RestClient.post "#{config.oauth_url}/consultations", {
+    access_token: access_token.token,
+    profile_id: 1,
+    assets: images,
+    content_type: :json,
 }
-token = JSON.parse(response)["access_token"]
 
-p token
-
-response = RestClient.post "#{config[:oauth_url]}/queues", {
-  access_token: token,
-}
 p response.code
+response_json =  JSON.parse(response.body)
+p response_json
+p response_json["status"]
+p response_json["error"]
