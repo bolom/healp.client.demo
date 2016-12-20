@@ -8,22 +8,21 @@ module Healp
   module Chat
     class Channel
 
-      attr_accessor :ip_messaging_client, :service
+      attr_accessor :client, :service
 
       def initialize
-        @ip_messaging_client = Twilio::REST::IpMessagingClient.new(ENV['ACCOUNT_SID'],ENV['AUTH_TOKEN'])
-        @service = @ip_messaging_client.services.get(ENV['IPM_SERVICE_SID'])
+        @client = Twilio::REST::Client.new(ENV['ACCOUNT_SID'],ENV['AUTH_TOKEN'])
+        @service = @client.ip_messaging.v1.services(ENV['IPM_SERVICE_SID']).fetch
+      end
+
+      def service
+        client.ip_messaging.v1.services(ENV['IPM_SERVICE_SID'])
       end
 
       def create(name)
         puts "[create channel]"
-        channel = service.channels.create(unique_name: name,
-                                          friendlyName: name,
-                                          created_by: 'jimmy0328@gmail.com')
-      end
-
-      def service
-        ip_messaging_client.services.get(ENV['IPM_SERVICE_SID'])
+        channel = service.fetch.channels.create(unique_name: name,
+                                                friendly_name: name)
       end
 
       def channels
@@ -33,7 +32,7 @@ module Healp
 
       def retrieve(channel_id)
         puts "[get channel- #{channel_id}]"
-        channel = service.channels.get(channel_id)
+        channel = service.channels(channel_id)
         channel
       end
 
@@ -41,7 +40,7 @@ module Healp
         puts "[delete channel- #{channel_id}]"
         begin
           channel = retrieve(channel_id)
-          response = channel.delete()
+          response = channel.delete
         rescue Exception => e
           p e.message
         end
@@ -57,19 +56,36 @@ module Healp
         channel = retrieve(channel_id)
         response = channel.messages.create(body: msg)
       end
+
+      def notify(identity)
+        notify_service_sid = ENV['TWILIO_NOTIFICATION_SERVICE_SID']
+        service = client.notify.v1.services(notify_service_sid)
+        begin
+          notification = service.notifications.create(
+            identity: identity,
+            body: "Hello",
+          );
+        rescue Exception => e
+          p e.message
+        end
+      end
+
     end
   end
 end
 
-#chat = Healp::Chat::Channel.new
-#p chat.create("jimmy_test_create_channel")
-#p chat.retrieve("jimmy_test_create_channel")
-#p chat.destroy('CH80af98bf991140a8bf03908d8cceeca7')
+chat = Healp::Chat::Channel.new
+#chat.notify("xxxxx")
+#p chat.create("jimmy ip messaging v1")
+#puts chat.retrieve("consultation_21").fetch.sid
+p chat.destroy('CH09fbac51741b46bcaa1657fbe0897688')
 # create message
 #(1..5).each do |n|
-#  chat.send_message("CH1f60928a62e745ae8fbe32f4a9b4751c","test_message_#{n}")
+#  chat.send_message("consultation_21","test_message_#{n}")
 #end
-#chat_messages = chat.messages("CH1f60928a62e745ae8fbe32f4a9b4751c")
+
+#chat_messages = chat.messages("consultation_21")
+#puts chat_messages
 #
 #
 

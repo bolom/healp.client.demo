@@ -39,10 +39,10 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    twilio-ruby (4.13.0)
+    twilio-ruby (5.0.0.rc17)
       builder (>= 2.1.2)
+      faraday (~> 0.9)
       jwt (~> 1.0)
-      multi_json (>= 1.3.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
@@ -56,7 +56,7 @@ DEPENDENCIES
   json
   oauth2
   rest-client
-  twilio-ruby
+  twilio-ruby (~> 5.0.0.rc17)
 
 RUBY VERSION
    ruby 2.3.1p112

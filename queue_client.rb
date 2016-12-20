@@ -15,7 +15,7 @@ images << File.new("/Users/jimmy/Dungeon.png", 'rb')
 
 response = RestClient.post "#{config.oauth_url}/consultations", {
     access_token: access_token.token,
-    profile_id: 4,
+    profile_id: 6,
     assets: images,
     content_type: :json,
 }
