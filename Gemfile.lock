@@ -39,6 +39,8 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
+    stripe (1.57.1)
+      rest-client (>= 1.4, < 4.0)
     twilio-ruby (5.0.0.rc17)
       builder (>= 2.1.2)
       faraday (~> 0.9)
@@ -56,6 +58,7 @@ DEPENDENCIES
   json
   oauth2
   rest-client
+  stripe
   twilio-ruby (~> 5.0.0.rc17)
 
 RUBY VERSION
