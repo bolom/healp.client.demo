@@ -2,11 +2,17 @@ require 'dotenv'
 Dotenv.load("#{File.dirname(__FILE__)}/.env")
 require_relative "config"
 
-config = Healp::Config.new(ENV['CLIENT_ID'],ENV['CLIENT_SECRET'],ENV['AUTH_URL'])
+#config = Healp::Config.new(ENV['CLIENT_ID'],ENV['CLIENT_SECRET'],ENV['AUTH_URL'])
+
+config = Healp::Config.new(ENV['CLIENT_ID_STAGING'],ENV['CLIENT_SECRET_STAGING'],ENV['AUTH_URL_STAGING'])
 
 client = OAuth2::Client.new(config.client_id, config.client_secret, :site =>  config.oauth_url)
 
+<<<<<<< HEAD
+access_token = client.password.get_token('patient2@lobo.studio', "}S'+<01o")
+=======
 access_token = client.password.get_token('jimmy@lobo.studio', "}S'+<01o")
+>>>>>>> origin/master
 
 puts access_token.token
 images = []
