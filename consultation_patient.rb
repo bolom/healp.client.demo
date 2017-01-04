@@ -1,22 +1,12 @@
-require 'dotenv'
-Dotenv.load("#{File.dirname(__FILE__)}/.env")
-require_relative "config"
+require_relative "base"
 
-config = Healp::Config.new(ENV['CLIENT_ID'],ENV['CLIENT_SECRET'],ENV['AUTH_URL'])
-response = RestClient.post "#{config.oauth_url}/oauth/token", {
-  grant_type: 'client_credentials',
-  client_id: config.client_id,
-  client_secret: config.client_secret,
-  scope: "admin"
-}
-p response
-token = JSON.parse(response)["access_token"]
-consultation_id = 23
+class Consultation < Base
+  def patient_summaries
+    response = RestClient.get "#{config.oauth_url}/consultation_summaries/23.json", {Authorization: "Bearer #{get_access_token}"}
+  end
+end
 
-token = JSON.parse(response)["access_token"]
-response = RestClient.get "#{config.oauth_url}/consultation_summaries/#{consultation_id}.json", {Authorization: "Bearer #{token}"}
-
-p response.code == 200 ? 'success' : 'fail'
-
-
-
+rate = Consultation.new
+res = rate.patient_summaries
+p res.code == 200 ? 'success' : 'fail'
+p JSON.parse(res.body)
